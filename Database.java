@@ -1,5 +1,7 @@
 import java.sql.*;
 
+import javax.lang.model.util.ElementScanner6;
+
 public class Database {
     static final String DB_URL = "jdbc:mysql://localhost:3306/University";
     static final String USER = "root";
@@ -16,20 +18,52 @@ public class Database {
                     + Name + "', '" + Department + "', '" + Reg_no + "', '" + Roll_no + "', '" + Section + "', '"
                     + Fathers_name + "', '" + Address + "', '" + Mobile + "')";
 
+            ResultSet rs = new Database().RetrieveRecord(Reg_no, Department);
             i = stmt.executeUpdate(sql);
+            do {
+                String course_code = rs.getString("course_code");
+                String course_name = rs.getString("course_name");
+                String sql1 = "Insert Into marks (Reg_no, Course, Course_code) values ( '" + Reg_no + "', '"
+                        + course_name + "', '" + course_code + "')";
+                i = stmt.executeUpdate(sql1);
+            } while (rs.next());
 
-            System.out.println("Created table in given databaase...");
+            System.out.println("Inserted Student Details in given databaase...");
         } catch (Exception e) {
             System.out.println(e);
         }
         return i;
     }
 
-    ResultSet RetrieveRecord(String Reg_no) {
+    ResultSet RetrieveRecord(String Reg_no, int q) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            String query = "SELECT * FROM Student WHERE Reg_no = '" + Reg_no + "'";
+            String query = "";
+            if (q == 0)
+                query = "SELECT * FROM Student WHERE Reg_no = '" + Reg_no + "'";
+            else if (q == 1)
+                query = "SELECT * FROM marks WHERE REG_no = '" + Reg_no + "'";
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            if (resultSet.next()) {
+                return resultSet;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    ResultSet RetrieveRecord(String Reg_no, String dept) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            String query = "SELECT * FROM course_details WHERE department = '" + dept + "'";
+
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
@@ -81,6 +115,36 @@ public class Database {
         return i;
     }
 
+    int feedMarks(String Reg_no, String courseCode, String CA1, String CA2, String CA3, String MTE, String ETE) {
+
+        int ca1 = Integer.parseInt(CA1);
+        int ca2 = Integer.parseInt(CA2);
+        int ca3 = Integer.parseInt(CA3);
+        int mte = Integer.parseInt(MTE);
+        int ete = Integer.parseInt(ETE);
+
+        int i = 0;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+
+            // String sql = "Insert Into marks (CA1, CA2, CA3, MTE, ETE) values ( '" + ca1 +
+            // "', '" + ca2 + "', '"
+            // + ca3 + "', '" + mte + "', '" + ete + "') WHERE Reg_no = '" + Reg_no + "'";
+
+            String sql = "UPDATE marks SET CA1 = '" + ca1 + "', CA2 = '" + ca2 + "', CA3 = '" + ca3 + "', MTE = '" + mte
+                    + "', ETE = '" + ete + "' WHERE Reg_no = '" + Reg_no + "' AND Course_code = '" + courseCode + "'";
+
+            i = stmt.executeUpdate(sql);
+
+            System.out.println("Inserted Student marks in given databaase...");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return i;
+    }
+
     public static void main(String str[]) throws SQLException {
         Database db = new Database();
 
@@ -90,6 +154,14 @@ public class Database {
         // db.UpdateStudentData("12108088", "Aftab", "MEC", "20", "RJ", "Razzak Ali",
         // "Pratappur", "9984526525");
 
-        db.DeleteStudentRecord("12105585");
+        // db.DeleteStudentRecord("12105585");
+        // db.feedMarks("12108086", "CSE205", "19", "25", "20", "15", "40");
+
+        // ResultSet rs = db.RetrieveRecord("12108086", "");
+        // do {
+
+        // System.out.println(rs.getString("ETE"));
+        // } while (rs.next());
+
     }
 }

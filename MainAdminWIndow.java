@@ -1,8 +1,8 @@
 import java.sql.ResultSet;
 
-// import javax.naming.spi.DirStateFactory.Result;
+import javax.naming.spi.DirStateFactory.Result;
 import javax.swing.*;
-// import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -54,6 +54,10 @@ class MainAdminWindow extends JFrame {
         add(buttonPanel, BorderLayout.CENTER);
 
         setVisible(true);
+    }
+
+    public static void main(String arg[]) {
+
     }
 }
 
@@ -230,7 +234,7 @@ class ShowDetailsToUpdate extends JFrame {
         setSize(400, 300);
 
         Database db = new Database();
-        ResultSet rs = db.RetrieveRecord(Reg_no);
+        ResultSet rs = db.RetrieveRecord(Reg_no, 0);
 
         JPanel panel = new JPanel(new GridLayout(4, 2));
         // row one

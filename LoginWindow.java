@@ -92,3 +92,10 @@ class SubLoginWindow extends JFrame {
         setVisible(true);
     }
 }
+
+class ErrorMessage extends JFrame {
+
+    public ErrorMessage(Exception e) {
+        JOptionPane.showMessageDialog(this, e, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}

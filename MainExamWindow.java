@@ -2,6 +2,7 @@ import java.sql.ResultSet;
 
 import javax.naming.spi.DirStateFactory.Result;
 import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
 import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 import javax.swing.text.View;
@@ -60,8 +61,9 @@ class MainExamWindow extends JFrame {
         // MainExamWindow mainExamWindow = new MainExamWindow();
         // FeedMarksWindow feedMarksWindowTemp = new FeedMarksWindow("12108086",
         // "CSE216");
-        // ViewMarksWindow viewMarksWindow = new ViewMarksWindow("12108086");
-        SelectCourseExamWindow selectCourseExamWindow = new SelectCourseExamWindow("12108086");
+        ViewMarksWindow viewMarksWindow = new ViewMarksWindow("ME202109");
+        // SelectCourseExamWindow selectCourseExamWindow = new
+        // SelectCourseExamWindow("12108086");
 
     }
 }
@@ -216,6 +218,8 @@ class FeedMarksWindow extends JFrame {
 
 class ViewMarksWindow extends JFrame {
 
+    private JButton downloadButton;
+
     public ViewMarksWindow(String Reg_no) {
         super("View Marks");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -298,18 +302,27 @@ class ViewMarksWindow extends JFrame {
         panel.add(new JLabel(""));
         panel.add(new JLabel("Roll_no "));
         panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
         panel.add(new JLabel("Section "));
+        panel.add(new JLabel(""));
+        panel.add(new JLabel(""));
         panel.add(new JLabel(""));
 
         panel.add(new JLabel(""));
         panel.add(new JLabel(Roll_no));
         panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
-        panel.add(new JLabel(""));
         panel.add(new JLabel(Section));
         panel.add(new JLabel(""));
+        downloadButton = new JButton("Download Report");
+        panel.add(downloadButton);
+        panel.add(new JLabel(""));
+
+        downloadButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Action to be performed
+                // Close the window
+                dispose();
+            }
+        });
 
         panel.add(new JLabel("-----------------------------------"));
         panel.add(new JLabel("-----------------------------------"));
@@ -327,7 +340,7 @@ class ViewMarksWindow extends JFrame {
         panel.add(new JLabel("MTE"));
         panel.add(new JLabel("ETE"));
 
-        ResultSet rs1 = db.RetrieveRecord("12108086", 1);
+        ResultSet rs1 = db.RetrieveRecord(Reg_no, 1);
         try {
             do {
                 // System.out.println(rs1.getString());

@@ -17,21 +17,25 @@ public class Database {
             String sql = "Insert Into Student (Name, Department, Reg_no, Roll_no, Section, Fathers_name, Address, Mobile) VALUES ( '"
                     + Name + "', '" + Department + "', '" + Reg_no + "', '" + Roll_no + "', '" + Section + "', '"
                     + Fathers_name + "', '" + Address + "', '" + Mobile + "')";
-
             ResultSet rs = new Database().RetrieveRecord(Reg_no, Department);
+            if (rs.getString("course_name") == null) {
+                NullPointerException nullPointer = new NullPointerException();
+                throw nullPointer;
+            }
             i = stmt.executeUpdate(sql);
             do {
                 String course_code = rs.getString("course_code");
                 String course_name = rs.getString("course_name");
-                String sql1 = "Insert Into marks (Reg_no, Course, Course_code) values ( '" + Reg_no + "', '"
-                        + course_name + "', '" + course_code + "')";
+                String sql1 = "Insert Into marks (Reg_no, Course, Course_code, CA1, CA2, CA3, MTE, ETE) values ( '"
+                        + Reg_no + "', '"
+                        + course_name + "', '" + course_code + "', 0, 0, 0, 0, 0)";
                 i = stmt.executeUpdate(sql1);
             } while (rs.next());
-
             System.out.println("Inserted Student Details in given databaase...");
         } catch (Exception e) {
-            System.out.println(e);
+            ErrorMessage errorMessage = new ErrorMessage(e);
         }
+
         return i;
     }
 
@@ -103,8 +107,10 @@ public class Database {
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
+            String query = "DELETE FROM marks WHERE Reg_no = '" + Reg_no + "'";
             String sql = "DELETE FROM Student WHERE Reg_no = '" + Reg_no + "' ";
 
+            i = stmt.executeUpdate(query);
             i = stmt.executeUpdate(sql);
             if (i > 0)
                 System.out.println("Deleted Record in from databaase...");

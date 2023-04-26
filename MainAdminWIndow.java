@@ -57,6 +57,7 @@ class MainAdminWindow extends JFrame {
     }
 
     public static void main(String arg[]) {
+        UpdateStudentWindow updateStudentWindow = new UpdateStudentWindow();
 
     }
 }
@@ -167,14 +168,14 @@ class UpdateStudentWindow extends JFrame {
                 try {
                     ShowDetailsToUpdate sdtu = new ShowDetailsToUpdate(regNumber);
                     sdtu.setVisible(true);
+                    // Close the window
+                    dispose();
 
                 } catch (Exception er) {
                     System.out.println(e);
-                    System.out.println("Not going well");
+                    ErrorMessage errorMessage = new ErrorMessage(er);
                 }
 
-                // Close the window
-                dispose();
             }
         });
         panel.add(findButton);
@@ -231,28 +232,36 @@ class ShowDetailsToUpdate extends JFrame {
     public ShowDetailsToUpdate(String Reg_no) throws SQLException {
         super("Update Details");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(400, 300);
+        setSize(400, 500);
 
         Database db = new Database();
         ResultSet rs = db.RetrieveRecord(Reg_no, 0);
 
-        JPanel panel = new JPanel(new GridLayout(4, 2));
+        JPanel panel = new JPanel(new GridLayout(8, 2));
         // row one
+        panel.add(new JLabel("Name"));
+        panel.add(new JLabel("Department"));
         nameField = new JTextField(rs.getString("name"));
         panel.add(nameField);
         departmentField = new JTextField(rs.getString("Department"));
         panel.add(departmentField);
         // row two
+        panel.add(new JLabel("Roll no"));
+        panel.add(new JLabel("Father's Name"));
         rollNumberField = new JTextField(rs.getString("Roll_no"));
         panel.add(rollNumberField);
         fNameField = new JTextField(rs.getString("Fathers_name"));
         panel.add(fNameField);
         // row three
+        panel.add(new JLabel("Address"));
+        panel.add(new JLabel("Mobile"));
         addField = new JTextField(rs.getString("Address"));
         panel.add(addField);
         mobNumberField = new JTextField(rs.getString("Mobile"));
         panel.add(mobNumberField);
         // row four
+        panel.add(new JLabel("Section"));
+        panel.add(new JLabel(""));
         sectionField = new JTextField(rs.getString("Section"));
         panel.add(sectionField);
         updateButton = new JButton("Update");
